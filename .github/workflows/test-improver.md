@@ -34,6 +34,8 @@ if: needs.pre_activation.outputs.check_result == 'success'
 
 timeout-minutes: 30
 
+model: gpt-5
+
 permissions: read-all
 
 network:
