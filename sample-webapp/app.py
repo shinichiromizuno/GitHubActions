@@ -1,3 +1,5 @@
+from html import escape
+
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -22,7 +24,9 @@ PAGE = """
 @app.route("/")
 def index():
     name = request.args.get("name", "").strip()
-    message = f"こんにちは、{name}さん！" if name else "名前を入力してください。"
+    # HTMLテンプレートに埋め込む前にエスケープし、反射型XSSを防ぐ
+    safe_name = escape(name)
+    message = f"こんにちは、{safe_name}さん！" if safe_name else "名前を入力してください。"
     return PAGE.format(message=message)
 
 
@@ -34,4 +38,6 @@ def health():
 
 if __name__ == "__main__":
     # macOSではポート5000がAirPlayレシーバーと競合するため5001を使用
-    app.run(debug=True, port=5001)
+    # debug=Trueはリモートコード実行につながるWerkzeugデバッガを有効化するため、
+    # 誤って本番運用してしまうリスクを避けるべく無効化する
+    app.run(debug=False, port=5001)

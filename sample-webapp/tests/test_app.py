@@ -56,14 +56,16 @@ def test_index_strips_surrounding_whitespace_from_name(client):
 
 def test_index_escapes_html_in_name_to_prevent_injection(client):
     """The greeting is built with str.format() into a raw HTML template.
-    If the name contains HTML/script it must not be rendered unescaped,
-    since Flask's Response used here is plain text, not auto-escaped by Jinja."""
+    If the name contains HTML/script it must be escaped before being
+    rendered, since Flask's Response used here is plain text, not
+    auto-escaped by Jinja."""
     response = client.get("/?name=<script>alert(1)</script>")
     assert response.status_code == 200
     body = response.get_data(as_text=True)
-    # Document current behavior: the app does not escape user input.
-    # This is a potential XSS risk since the name is echoed back verbatim.
-    assert "<script>alert(1)</script>" in body
+    # The name is HTML-escaped, so the raw script tag must not appear,
+    # and the escaped form must be present instead.
+    assert "<script>alert(1)</script>" not in body
+    assert "&lt;script&gt;alert(1)&lt;/script&gt;" in body
 
 
 def test_health_endpoint_returns_ok_json(client):
