@@ -22,3 +22,17 @@ python app.py
 |------|------|
 | `/` | 名前を入力すると挨拶を表示 |
 | `/health` | ヘルスチェック (JSON) |
+
+## テスト
+
+```bash
+cd sample-webapp
+pip install -r requirements.txt -r requirements-dev.txt
+pytest
+```
+
+カバレッジを確認する場合:
+
+```bash
+pytest --cov=app --cov-report=term-missing
+```
