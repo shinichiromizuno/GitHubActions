@@ -16,3 +16,12 @@
   require jinja2 templating or manual escaping, which is a behavior change
   outside test-only scope).
 - No other application/library code exists yet to test as of this run.
+- 2026-09-21: Confirmed via PR #8 (merged by maintainer) that the reflected-XSS
+  and Flask debug=True issues previously flagged were fixed upstream (not by
+  Test Improver). The existing test now correctly asserts escaped output.
+- 2026-09-21: Repo had no CI job running the sample-webapp pytest suite despite
+  7 tests existing since 2026-09-20 - added `.github/workflows/sample-webapp-tests.yml`
+  (standard checkout + setup-python + pip install + pytest --cov, path-filtered
+  to `sample-webapp/**`). Verified locally via a fresh venv (system pip is
+  externally-managed/PEP668, so use `python3 -m venv` + venv pip for local
+  validation in this environment).
